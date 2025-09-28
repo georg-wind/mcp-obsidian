@@ -343,7 +343,7 @@ class PutContentToolHandler(ToolHandler):
        if "filepath" not in args or "content" not in args:
            raise RuntimeError("filepath and content arguments required")
 
-       api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+       api = create_obsidian_api()
        api.put_content(args.get("filepath", ""), args["content"])
 
        return [
@@ -537,7 +537,7 @@ class PeriodicNotesToolHandler(ToolHandler):
         
         as_json = args.get("as_json", False)
         
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         content = api.get_periodic_note(period, as_json)
         
         if as_json:
@@ -685,7 +685,7 @@ class GetActiveNoteToolHandler(ToolHandler):
     def run_tool(self, args: dict) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         as_json = args.get("as_json", False)
         
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         content = api.get_active_note(as_json)
         
         if as_json:
@@ -727,7 +727,7 @@ class AppendToActiveToolHandler(ToolHandler):
         if "content" not in args:
             raise RuntimeError("content argument required")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.append_to_active(args["content"])
 
         return [
@@ -761,7 +761,7 @@ class ReplaceActiveNoteToolHandler(ToolHandler):
         if "content" not in args:
             raise RuntimeError("content argument required")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.replace_active_note(args["content"])
 
         return [
@@ -809,7 +809,7 @@ class PatchActiveNoteToolHandler(ToolHandler):
         if not all(k in args for k in ["operation", "target_type", "target", "content"]):
             raise RuntimeError("operation, target_type, target and content arguments required")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.patch_active_note(
             args.get("operation", ""),
             args.get("target_type", ""),
@@ -849,7 +849,7 @@ class DeleteActiveNoteToolHandler(ToolHandler):
         if not args.get("confirm", False):
             raise RuntimeError("confirm must be set to true to delete the active note")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.delete_active_note()
 
         return [
@@ -893,7 +893,7 @@ class AppendToPeriodicToolHandler(ToolHandler):
         if period not in valid_periods:
             raise RuntimeError(f"Invalid period: {period}. Must be one of: {', '.join(valid_periods)}")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.append_to_periodic(period, args["content"])
 
         return [
@@ -937,7 +937,7 @@ class ReplacePeriodicNoteToolHandler(ToolHandler):
         if period not in valid_periods:
             raise RuntimeError(f"Invalid period: {period}. Must be one of: {', '.join(valid_periods)}")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.replace_periodic_note(period, args["content"])
 
         return [
@@ -995,7 +995,7 @@ class PatchPeriodicNoteToolHandler(ToolHandler):
         if period not in valid_periods:
             raise RuntimeError(f"Invalid period: {period}. Must be one of: {', '.join(valid_periods)}")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.patch_periodic_note(
             period,
             args.get("operation", ""),
@@ -1049,7 +1049,7 @@ class DeletePeriodicNoteToolHandler(ToolHandler):
         if period not in valid_periods:
             raise RuntimeError(f"Invalid period: {period}. Must be one of: {', '.join(valid_periods)}")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.delete_periodic_note(period)
 
         return [
@@ -1075,7 +1075,7 @@ class ListCommandsToolHandler(ToolHandler):
         )
 
     def run_tool(self, args: dict) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         commands = api.list_commands()
         
         # Format the commands for better readability
@@ -1119,7 +1119,7 @@ class ExecuteCommandToolHandler(ToolHandler):
         if "command_id" not in args:
             raise RuntimeError("command_id argument required")
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.execute_command(args["command_id"])
 
         return [
@@ -1161,7 +1161,7 @@ class OpenFileToolHandler(ToolHandler):
         filename = args["filename"]
         new_leaf = args.get("new_leaf", False)
 
-        api = obsidian.Obsidian(api_key=api_key, host=obsidian_host)
+        api = create_obsidian_api()
         api.open_file(filename, new_leaf)
 
         return [
